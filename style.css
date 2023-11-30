@@ -69,7 +69,7 @@ form {
 
 
 .name-details {
-    display: flex;
+    /* display: flex; */
     flex-wrap: wrap;
     justify-content: center;
 }

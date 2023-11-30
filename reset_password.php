@@ -38,7 +38,7 @@ if (isset($_POST["reset_request"])) {
             // Send the email using your mailer script
             $emailResult = sendMail($to, '', $subject, $message);
 
-            if ($emailResult === true) {
+            if ($emailResult == true) {
                 // Email sent successfully
                 $_SESSION["success_message"] = "Password reset link sent to your email.";
                 echo '<script>alert("Password reset link sent to your email. Check your inbox!");</script>';

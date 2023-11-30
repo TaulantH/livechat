@@ -47,7 +47,7 @@
                         </div>
                         <div class="form-row">
                             <div class="field">
-                                <input type="submit" value="Continue to chat">
+                                <input type="submit" value="Register">
                             </div>
                         </div>
 
