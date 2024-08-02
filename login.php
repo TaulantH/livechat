@@ -11,16 +11,18 @@
 </head>
 <body>
 <div class="container">
-    <div class="wrapper">
+    <div class="wrapper-login">
         <section class="form login">
-        <header class="chat-header">Realtime chat LOGIN</header>
+     
+        <img src="logo.png" class="logo">
+        <header class="chat-header">LOGIN</header>
     
             <form action="php/login.php">
             <div class="name-details">
                         <div class="form-row">
                     <div class="field">
                         <label for="">Email Address</label>
-                        <input type="email" name="email" placeholder="email" id="">
+                        <input type="text" name="email" placeholder="email" id="" required>
                     </div>
                         </div>
                         <div class="form-row">

@@ -1,4 +1,5 @@
 <?php
+
 include "reset_password.php";
 
 ?>
@@ -25,7 +26,7 @@ include "reset_password.php";
                     <div class="form-row">
                         <div class="field">
                             <label for="email_or_username">Email or Username:</label>
-                            <input type="text" class="form-control" id="email" name="email" required>
+                            <input type="email" class="form-control" id="email" name="email" required>
                         </div>
                     </div>
 

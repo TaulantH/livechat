@@ -1,50 +1,59 @@
 <?php
-// Replace with your database connection code
-include_once "config.php";
-
-$output = '';
-
+session_start();
 if (isset($_SESSION['unique_id'])) {
-    $sql = "SELECT * FROM users";
+    include_once "config.php";
+    $outgoing_msg_id = mysqli_real_escape_string($conn, $_POST['outgoing_msg_id']);
+    $incoming_msg_id = mysqli_real_escape_string($conn, $_POST['incoming_msg_id']);
+    $messageCount = mysqli_real_escape_string($conn, $_POST['messageCount']);
+
+    $output = "";
+
+    $sql = "SELECT * FROM messages 
+            LEFT JOIN users ON users.unique_id = messages.outgoing_msg_id
+            WHERE (outgoing_msg_id = $outgoing_msg_id AND incoming_msg_id = $incoming_msg_id)
+            OR (outgoing_msg_id = $incoming_msg_id AND incoming_msg_id = $outgoing_msg_id)
+            ORDER BY msg_id DESC LIMIT $messageCount";
     $query = mysqli_query($conn, $sql);
 
-    if ($query) {
+    if (mysqli_num_rows($query) > 0) {
         while ($row = mysqli_fetch_assoc($query)) {
-            $sql2 = "SELECT * FROM messages WHERE (incoming_msg_id = {$row['unique_id']}
-                    OR outgoing_msg_id = {$row['unique_id']}) AND (outgoing_msg_id = {$_SESSION['unique_id']}
-                    OR outgoing_msg_id = {$row['unique_id']}) ORDER BY msg_id DESC LIMIT 1";
-            $query2 = mysqli_query($conn, $sql2);
-            $you = "";
+            $messageTime = date('Y-m-d H:i:s', strtotime($row['message_time']));
+            $msg = $row['msg'];
+            $file_link = '';
 
-            if ($query2 && mysqli_num_rows($query2) > 0) {
-                $row2 = mysqli_fetch_assoc($query2);
-                $result = $row2['msg'];
-                $you = ($row2['outgoing_msg_id'] == $_SESSION['unique_id']) ? "You: " : "";
-            } else {
-                $result = "No messages available";
+            // Check if the message contains a file link
+            if (strpos($msg, '[File:') !== false) {
+                preg_match('/\[File: (.+?)\]/', $msg, $matches);
+                if (!empty($matches[1])) {
+                    $file_link = $matches[1];
+                    $msg = str_replace("[File: $file_link]", '<a href="uploads/' . $file_link . '" target="_blank">View File</a>', $msg);
+                }
             }
 
-            $msg = (strlen($result) > 28) ? substr($result, 0, 28) . '...' : $result;
-
-            $offline = ($row['status'] == "Offline now") ? "offline" : "";
-
-            $output .= '<a href="chat.php?id=' . $row['unique_id'] . '">
-                <div class="content">
+            if ($row['outgoing_msg_id'] == $outgoing_msg_id) {
+                $output = '<div class="chat outgoing">
                     <img src="php/' . $row['img'] . '" alt="">
                     <div class="details">
-                        <span>' . $row['fname'] . " " . $row['lname'] . '</span>
-                        <p>' . $you . $msg . '</p>
+                        <p class="outgoing-chat">
+                            ' . $msg . ' 
+                            <span class="message-time">' . $messageTime . '</span>
+                        </p>
                     </div>
-                </div>
-                <div class="status-dot ' . $offline . '"><i class="fa fa-circle"></i></div>
-            </a>';
+                </div>' . $output;
+            } else {
+                $output = '<div class="chat incoming">
+                    <img src="php/' . $row['img'] . '" alt="">
+                    <div class="details">
+                        <p class="incoming-chat">
+                            ' . $msg . ' 
+                            <span class="message-time">' . $messageTime . '</span>
+                        </p>
+                    </div>
+                </div>' . $output;
+            }
         }
-
-    } else {
-        // Handle database query error here
-        http_response_code(500);
+        echo $output;
     }
 } else {
     header("location: ../login.php");
 }
-?>

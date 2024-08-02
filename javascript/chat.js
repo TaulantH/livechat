@@ -1,13 +1,13 @@
-const from = document.querySelector(".typing-area");
-const inputField = from.querySelector(".input-field");
-const sendBtn = from.querySelector("button");
+const form = document.querySelector(".typing-area");
+const inputField = form.querySelector(".input-field");
+const fileInput = form.querySelector("input[type='file']");
+const sendBtn = form.querySelector("button");
 const chatBox = document.querySelector(".chat-box");
 let messageCount = 20; // Initialize with the initial message count
 let isFetching = false; // Flag to prevent multiple fetch requests
 let isScrolledToBottom = true; // Flag to track if user manually scrolled
 
-
-from.onsubmit = (e) => {
+form.onsubmit = (e) => {
     e.preventDefault(); // Prevent the default form submission
     sendMessage();
 };
@@ -45,6 +45,7 @@ function sendMessage() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 inputField.value = "";
+                fileInput.value = ""; // Reset the file input
                 if (isScrolledToBottom) {
                     // Scroll to the bottom only if the user was already at the bottom
                     scrollToBottom();
@@ -55,7 +56,7 @@ function sendMessage() {
             }
         }
     };
-    let formData = new FormData(from);
+    let formData = new FormData(form);
     xhr.send(formData);
 }
 
@@ -81,7 +82,7 @@ function fetchMessages() {
             }
         }
     };
-    let formData = new FormData(from);
+    let formData = new FormData(form);
     formData.append("messageCount", messageCount);
     messageCount += 20;
     xhr.send(formData);

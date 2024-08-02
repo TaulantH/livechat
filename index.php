@@ -11,9 +11,11 @@
 
 <body>
     <div class="container">
-        <div class="wrapper">
+        <div class="wrapper-login">
             <section class="form signup">
-                <header class="chat-header">Realtime chat REGISTER</header>
+            <img src="logo.png" class="logo">
+
+                <header class="chat-header">REGISTER</header>
                 <form action="php/signup.php" method="POST" enctype="multipart/form-data" autocomplete="off">
 
 
@@ -35,14 +37,16 @@
                             </div>
                             <div class="field">
                                 <label for="password">Password</label>
-                                <input type="password" name="password" id="password" placeholder="Password" required>
-                                <!-- <i class="fa fa-eye" id="togglePassword"></i> -->
+                                <input type="password" name="password" id="password"  placeholder="Password" required>
+                             <!-- <i class="fa fa-eye" id="togglePassword"></i>  -->
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="field">
-                                <label for="image">Select Image</label>
-                                <input type="file" name="image" id="image" accept="image/" required>
+                            <div class="button-wrapper">
+                                <span class="label">
+                                    Upload File
+                                </span>
+                                <input type="file" class="input-file" name="image" id="image" placeholder="Upload File" accept="image/" required>
                             </div>
                         </div>
                         <div class="form-row">
